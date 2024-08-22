@@ -9,66 +9,81 @@ class ChooseLang extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(40),
-          child:  Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Spacer(),
               const Align(
                 alignment: Alignment.topRight,
-                child: Text("عسلامة 👋", style: ArabicTextStyle(
+                child: Text(
+                  "عسلامة 👋",
+                  style: ArabicTextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
+                    arabicFont: ArabicFont.cairo,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+              ),
+              const Text(
+                "إختار اللغة الي تناسبك",
+                style: ArabicTextStyle(
                   color: Colors.black,
-                  fontSize: 30,
+                  fontSize: 28,
                   fontWeight: FontWeight.w800,
                   arabicFont: ArabicFont.cairo,
                 ),
                 textDirection: TextDirection.rtl,
-                ),
               ),
-
-              const Text("إختار اللغة الي تناسبك", style: ArabicTextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-                arabicFont: ArabicFont.cairo,
-              ),),
-
-              const SizedBox(height: 50,),
-
+              const SizedBox(
+                height: 50,
+              ),
               langButton(false, "اللهجة التونسية", "assets/images/tn_flag.png"),
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
               langButton(false, "Français", "assets/images/fr_flag.png"),
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
               langButton(false, "English", "assets/images/uk_flag.png"),
-
-              const SizedBox(height: 80,),
-
+              const SizedBox(
+                height: 80,
+              ),
               SizedBox(
                 height: 50,
                 width: 150,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-                    backgroundColor: WidgetStateProperty.all<Color>(AppColors.blue1),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
+                      shadowColor:
+                          const MaterialStatePropertyAll(Colors.transparent),
+                      backgroundColor: const MaterialStatePropertyAll<Color>(
+                          AppColors.blue1),
+                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
-                      )
-                    )
-                  ),
-                  onPressed: (){
+                      ))),
+                  onPressed: () {
                     context.go("/onBoarding");
-                  }, child: const Text("متابعة", style: ArabicTextStyle(
-                color: Colors.white,
-                fontSize: 19.2,
-                fontWeight: FontWeight.w600,
-                arabicFont: ArabicFont.cairo,
-              ),),),),
+                  },
+                  child: const Text(
+                    "متابعة",
+                    style: ArabicTextStyle(
+                      color: Colors.white,
+                      fontSize: 19.2,
+                      fontWeight: FontWeight.w600,
+                      arabicFont: ArabicFont.cairo,
+                    ),
+                  ),
+                ),
+              ),
               const Spacer(),
             ],
           ),
