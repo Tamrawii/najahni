@@ -1,18 +1,85 @@
 import 'package:circular_seek_bar/circular_seek_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:isar/isar.dart';
 import 'package:najahni/core/constants/colors.dart';
+import 'package:najahni/core/models/student_model.dart';
+import 'package:najahni/data/local/db/app_db.dart';
+import 'package:workmanager/workmanager.dart';
 
-class HomeScreen extends StatelessWidget {
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? userName;
+  TextEditingController mainTaskController = TextEditingController();
+  bool isDone = false;
+
+  Future<List?> getName() async{
+    IsarServices isarServices = IsarServices();
+    final db = isarServices.openDb();
+    final isar = await db;
+
+    final userId = await isar.studentModels.where().findAll();
+    final existingUser = userId[0].name;
+    final mainTask = userId[0].mainTask;
+    final isDoneTask = userId[0].isDone;
+    return [existingUser, mainTask, isDoneTask];
+  }
+
+  // Usage
+  void loadData() async {
+    List? list = await getName();
+    String? name = list![0];
+    String? task = list[1];
+    bool? isDoneTask = list[2];
+    userName = name!;
+    mainTaskController.text = task!;
+    isDone = isDoneTask!;
+    setState(() {
+    });
+  }
+
+  void _scheduleDailyTask() {
+    Workmanager().registerPeriodicTask(
+      "2", // Unique name for the task
+      "dailyTask",
+      frequency: const Duration(hours: 24), // Repeat every 24 hours
+      // initialDelay: const Duration(minutes: 2), // Start task in 2 minutes
+      inputData: {"key": "value"}, // Optional: you can pass some input data to your task
+      constraints: Constraints(
+        networkType: NetworkType.not_required,
+        requiresCharging: false,
+        requiresBatteryNotLow: true,
+      ),
+    );
+  }
+
+
+  Duration _initialDelay() {
+    final now = DateTime.now();
+    final midnight = DateTime(now.year, now.month, now.day, 0, 0);
+    return midnight.difference(now);
+  }
+
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+    _scheduleDailyTask();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return userName != null ? Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -26,10 +93,10 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "Welcome back,",
                           style: TextStyle(
                             fontFamily: "Rubik",
@@ -38,8 +105,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Chahine,",
-                          style: TextStyle(
+                          "$userName,",
+                          style: const TextStyle(
                             fontFamily: "Rubik",
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
@@ -172,20 +239,55 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(
                           height: 15,
                         ),
-                        TextField(
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.multiline,
-                          minLines: 1,
-                          maxLines: 2,
-                          style: GoogleFonts.merriweather(
-                            fontSize: 19.2,
-                            // color: HexColor("CCCCCC")
-                          ),
-                          decoration: InputDecoration(
-                            hintText: "What will you focus on today?",
-                            border: InputBorder.none,
-                            hintStyle: GoogleFonts.merriweather(
-                                fontSize: 19.2, color: HexColor("CCCCCC")),
+                        GestureDetector(
+                          onDoubleTap: () async{
+                            setState((){
+                              isDone = !isDone;
+                              });
+
+                              IsarServices isarServices = IsarServices();
+                              final db = isarServices.openDb();
+                              final isar = await db;
+
+                              final userId = await isar.studentModels.where().findAll();
+                              final existingUser = userId[0];
+
+                              await isar.writeTxn(() async {
+                                existingUser.isDone = isDone;
+                                await isar.studentModels.put(existingUser);
+                            });
+                          },
+                          child: TextFormField(
+                            readOnly: mainTaskController.text == "" ? false : true,
+                            enableInteractiveSelection: mainTaskController.text == "" ? true : false,
+                            controller: mainTaskController,
+                            onFieldSubmitted: (value) async{
+                              IsarServices isarServices = IsarServices();
+                              final db = isarServices.openDb();
+                              final isar = await db;
+
+                              final userId = await isar.studentModels.where().findAll();
+                              final existingUser = userId[0];
+
+                              await isar.writeTxn(() async {
+                                existingUser.mainTask = mainTaskController.text;
+                                existingUser.isDone = false;
+                                await isar.studentModels.put(existingUser);
+                              });
+
+                            },
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.merriweather(
+                              fontSize: 19.2,
+                              decoration: isDone ? TextDecoration.lineThrough : null,
+                              // color: HexColor("CCCCCC")
+                            ),
+                            decoration: InputDecoration(
+                              hintText: "What will you focus on today?",
+                              border: InputBorder.none,
+                              hintStyle: GoogleFonts.merriweather(
+                                  fontSize: 19.2, color: HexColor("CCCCCC")),
+                            ),
                           ),
                         )
                       ],
@@ -236,9 +338,9 @@ class HomeScreen extends StatelessWidget {
                               child: ElevatedButton.icon(
                                 style: const ButtonStyle(
                                   backgroundColor:
-                                      MaterialStatePropertyAll<Color>(
+                                      WidgetStatePropertyAll<Color>(
                                           Colors.transparent),
-                                  shadowColor: MaterialStatePropertyAll<Color>(
+                                  shadowColor: WidgetStatePropertyAll<Color>(
                                       Colors.transparent),
                                 ),
                                 onPressed: () {
@@ -358,6 +460,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ) : const Scaffold( body:  Center(child: Text("Laoding...")));
   }
 }

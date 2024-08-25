@@ -16,7 +16,7 @@ class ChooseLang extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.all(40),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const Spacer(),
               const Align(
@@ -57,29 +57,31 @@ class ChooseLang extends StatelessWidget {
               const SizedBox(
                 height: 80,
               ),
-              SizedBox(
-                height: 50,
-                width: 150,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      shadowColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      backgroundColor: const MaterialStatePropertyAll<Color>(
-                          AppColors.blue1),
-                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ))),
-                  onPressed: () {
-                    context.go("/onBoarding");
-                  },
-                  child: const Text(
-                    "متابعة",
-                    style: ArabicTextStyle(
-                      color: Colors.white,
-                      fontSize: 19.2,
-                      fontWeight: FontWeight.w600,
-                      arabicFont: ArabicFont.cairo,
+              Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor:
+                            const WidgetStatePropertyAll(Colors.transparent),
+                        backgroundColor: const WidgetStatePropertyAll<Color>(
+                            AppColors.blue1),
+                        shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ))),
+                    onPressed: () {
+                      context.go("/onBoarding");
+                    },
+                    child: const Text(
+                      "متابعة",
+                      style: ArabicTextStyle(
+                        color: Colors.white,
+                        fontSize: 19.2,
+                        fontWeight: FontWeight.w600,
+                        arabicFont: ArabicFont.cairo,
+                      ),
                     ),
                   ),
                 ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:najahni/core/constants/colors.dart';
+
+TextEditingController lvlController = TextEditingController();
+TextEditingController sectionController = TextEditingController();
 
 class SchoolLvl extends StatelessWidget {
   const SchoolLvl({super.key});
@@ -8,7 +10,6 @@ class SchoolLvl extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // const Spacer(),
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -22,7 +23,9 @@ class SchoolLvl extends StatelessWidget {
             ),
           ],
         ),
-        const Spacer(),
+
+        const SizedBox(height: 20,),
+
         Image.asset("assets/images/img3.png"),
         const SizedBox(
           height: 50,
@@ -33,10 +36,11 @@ class SchoolLvl extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DropdownMenu(
+                controller: lvlController,
                   hintText: "Your level?",
                   menuStyle: MenuStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
+                        WidgetStateProperty.all<Color>(Colors.white),
                   ),
                   dropdownMenuEntries: const [
                     DropdownMenuEntry(value: "", label: "1ere année"),
@@ -47,10 +51,11 @@ class SchoolLvl extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              const DropdownMenu(
-                  enabled: false,
+               DropdownMenu(
+                controller: sectionController,
+                  // enabled: false,
                   hintText: "Your section?",
-                  dropdownMenuEntries: [
+                  dropdownMenuEntries: const [
                     DropdownMenuEntry(value: "", label: "Science"),
                     DropdownMenuEntry(value: "", label: "Math"),
                     DropdownMenuEntry(value: "", label: "Informatique"),
@@ -60,7 +65,6 @@ class SchoolLvl extends StatelessWidget {
             ],
           ),
         ),
-        const Spacer(),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:najahni/core/constants/colors.dart';
 
 class ToDo extends StatelessWidget {
@@ -6,13 +7,13 @@ class ToDo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Row(
+              const Row(
                 children: [
                   Text(
                     "You've got",
@@ -35,6 +36,58 @@ class ToDo extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Expanded(child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
+                      style: const TextStyle(
+                        fontFamily: "Spring",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 19.2,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: "Type your task",
+                        hintStyle: TextStyle(
+                          color: HexColor("CCCCCC"),
+                          fontFamily: "Spring",
+                        )
+                      ),
+                    ),),
+                    IconButton(onPressed: (){}, icon: const Icon(Icons.add))
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              Container(
+                decoration:  BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+
+                  ]
+                ),
+                child: Row(
+                  children: [
+                    Checkbox(value: false, onChanged: (val){}),
+                    const Text("Finish programming lesson", style: TextStyle(
+                      fontSize: 19.2,
+                      fontFamily: "Spring",
+                      fontWeight: FontWeight.w500,
+                    ),),
+                  ],
+                ),
               ),
             ],
           ),

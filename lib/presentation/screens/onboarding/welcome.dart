@@ -12,7 +12,6 @@ class OnBoardingContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // const Spacer(),
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -29,7 +28,9 @@ class OnBoardingContent extends StatelessWidget {
             ),),
           ],
         ),
-        const Spacer(),
+
+        const SizedBox(height: 50,),
+
         Image.asset("assets/images/img1.png"),
         const SizedBox(height: 16,),
         Padding(
@@ -41,7 +42,7 @@ class OnBoardingContent extends StatelessWidget {
           ),
           ),
         ),
-        const Spacer(),
+
       ],
     );
 

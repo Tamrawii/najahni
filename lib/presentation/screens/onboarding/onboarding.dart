@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:najahni/core/constants/colors.dart';
+import 'package:najahni/core/models/student_model.dart';
+import 'package:najahni/data/local/db/app_db.dart';
 import 'package:najahni/presentation/screens/onboarding/ask_name.dart';
 import 'package:najahni/presentation/screens/onboarding/grade_goal.dart';
 import 'package:najahni/presentation/screens/onboarding/school_lvl.dart';
@@ -19,6 +21,18 @@ class _OnBoardingState extends State<OnBoarding> {
 
   List pagesList =[const OnBoardingContent(), const AskName(), const SchoolLvl(), const GradeGoal()];
 
+  void saveStudentData() {
+    IsarServices isarServices = IsarServices();
+    final student = StudentModel();
+    student.name = nameController.text;
+    student.schoolLvl = lvlController.text;
+    student.section = sectionController.text;
+    student.gradeGoal = double.parse(goalController.text);
+    student.mainTask = "";
+
+    isarServices.saveStudent(student);
+  }
+
   @override
   void initState() {
     _pageController = PageController(initialPage: 0);
@@ -35,6 +49,7 @@ class _OnBoardingState extends State<OnBoarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -53,14 +68,14 @@ class _OnBoardingState extends State<OnBoarding> {
               Expanded(
                 child: PageView.builder(
                   controller: _pageController,
+                  itemCount: pagesList.length,
                   onPageChanged: (index){
                     setState(() {
                       _pageIndex = index;
                     });
                   },
                   itemBuilder: (context, index) {
-                  return pagesList[index];
-
+                    return pagesList[index];
                 },),
               ),
 
@@ -83,13 +98,14 @@ class _OnBoardingState extends State<OnBoarding> {
                         shape: const CircleBorder(),
                         backgroundColor: AppColors.blue1,
                       ),
-                      onPressed: (){
-                        if(_pageIndex == 3){
+                      onPressed: () {
+                        if(_pageIndex == pagesList.length - 1){
+                          saveStudentData();
                           context.go("/main");
                         }else{
                           _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
                         }
-                      }, child: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 25,)),
+                      }, child: _pageIndex <= 2? const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 25,) : const Icon(Icons.rocket_rounded, color: Colors.white, size: 25,)),
                   ),
                 ],
               ),
