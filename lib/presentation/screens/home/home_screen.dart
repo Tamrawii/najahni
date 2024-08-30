@@ -6,8 +6,10 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:isar/isar.dart';
 import 'package:najahni/core/constants/colors.dart';
 import 'package:najahni/core/models/student_model.dart';
+import 'package:najahni/core/utils/helpers.dart';
 import 'package:najahni/data/local/db/app_db.dart';
-import 'package:workmanager/workmanager.dart';
+import 'package:najahni/data/providers/db_provider.dart';
+import 'package:provider/provider.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -18,448 +20,417 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? userName;
   TextEditingController mainTaskController = TextEditingController();
-  bool isDone = false;
-
-  Future<List?> getName() async{
-    IsarServices isarServices = IsarServices();
-    final db = isarServices.openDb();
-    final isar = await db;
-
-    final userId = await isar.studentModels.where().findAll();
-    final existingUser = userId[0].name;
-    final mainTask = userId[0].mainTask;
-    final isDoneTask = userId[0].isDone;
-    return [existingUser, mainTask, isDoneTask];
-  }
-
-  // Usage
-  void loadData() async {
-    List? list = await getName();
-    String? name = list![0];
-    String? task = list[1];
-    bool? isDoneTask = list[2];
-    userName = name!;
-    mainTaskController.text = task!;
-    isDone = isDoneTask!;
-    setState(() {
-    });
-  }
-
-  void _scheduleDailyTask() {
-    Workmanager().registerPeriodicTask(
-      "2", // Unique name for the task
-      "dailyTask",
-      frequency: const Duration(hours: 24), // Repeat every 24 hours
-      // initialDelay: const Duration(minutes: 2), // Start task in 2 minutes
-      inputData: {"key": "value"}, // Optional: you can pass some input data to your task
-      constraints: Constraints(
-        networkType: NetworkType.not_required,
-        requiresCharging: false,
-        requiresBatteryNotLow: true,
-      ),
-    );
-  }
-
-
-  Duration _initialDelay() {
-    final now = DateTime.now();
-    final midnight = DateTime(now.year, now.month, now.day, 0, 0);
-    return midnight.difference(now);
-  }
-
 
   @override
   void initState() {
-    loadData();
+    // Use it inside StreamBuilder
+    context.read<DbProvider>().loadData();
     super.initState();
-    _scheduleDailyTask();
   }
+
 
   @override
   Widget build(BuildContext context) {
-    return userName != null ? Scaffold(
+    DbProvider dbProvider = DbProvider();
+    if(context.watch<DbProvider>().mainTask != null){
+      mainTaskController.text = context.watch<DbProvider>().mainTask!;
+    }
+
+
+      return mainTaskController.text == null ? const Center(child: Text("Loading...")): Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                // TOP
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Welcome back,",
-                          style: TextStyle(
-                            fontFamily: "Rubik",
-                            fontSize: 19.2,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        Text(
-                          "$userName,",
-                          style: const TextStyle(
-                            fontFamily: "Rubik",
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.card_giftcard_outlined,
-                        ))
-                  ],
-                ),
-
-                const SizedBox(
-                  height: 40,
-                ),
-
-                // Quote
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: HexColor("eeeeee").withOpacity(0.5),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.format_quote_outlined,
-                              size: 20,
-                              color: HexColor("989898"),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Daily Quote",
-                              style: TextStyle(
-                                  color: HexColor("989898"),
-                                  fontFamily: "Rubic",
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          '"If you wish to be a success in the world, promise everything, deliver nothing."',
-                          style: GoogleFonts.merriweather(
-                            fontSize: 22,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite_outline_rounded,
-                                  color: HexColor("FA4C4C"),
-                                )),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 1,
-                                  width: 25,
-                                  color: HexColor("666666"),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Text(
-                                  "Napolean",
-                                  style: GoogleFonts.merriweather(
-                                      fontSize: 15, color: HexColor("666666")),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(
-                  height: 20,
-                ),
-
-                // Main Task
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: HexColor("eeeeee").withOpacity(0.5),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.task_alt_rounded,
-                              size: 20,
-                              color: HexColor("989898"),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Today's main task",
-                              style: TextStyle(
-                                  color: HexColor("989898"),
-                                  fontFamily: "Rubic",
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        GestureDetector(
-                          onDoubleTap: () async{
-                            setState((){
-                              isDone = !isDone;
-                              });
-
-                              IsarServices isarServices = IsarServices();
-                              final db = isarServices.openDb();
-                              final isar = await db;
-
-                              final userId = await isar.studentModels.where().findAll();
-                              final existingUser = userId[0];
-
-                              await isar.writeTxn(() async {
-                                existingUser.isDone = isDone;
-                                await isar.studentModels.put(existingUser);
-                            });
-                          },
-                          child: TextFormField(
-                            readOnly: mainTaskController.text == "" ? false : true,
-                            enableInteractiveSelection: mainTaskController.text == "" ? true : false,
-                            controller: mainTaskController,
-                            onFieldSubmitted: (value) async{
-                              IsarServices isarServices = IsarServices();
-                              final db = isarServices.openDb();
-                              final isar = await db;
-
-                              final userId = await isar.studentModels.where().findAll();
-                              final existingUser = userId[0];
-
-                              await isar.writeTxn(() async {
-                                existingUser.mainTask = mainTaskController.text;
-                                existingUser.isDone = false;
-                                await isar.studentModels.put(existingUser);
-                              });
-
-                            },
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.merriweather(
+            child: StreamBuilder(
+              stream: dbProvider.geData(),
+              builder: (context, snapshot) {
+                // if(snapshot.connectionState == ConnectionState.waiting) {
+                //   return const Center(child: Text("Loading..."),);
+                // }else
+                if(snapshot.hasError){
+                  return Center(child: Text("Error ${snapshot.error}" ),);
+                }else if(snapshot.hasData){
+                  return Column(
+                children: [
+                  // TOP
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Welcome back,",
+                            style: TextStyle(
+                              fontFamily: "Rubik",
                               fontSize: 19.2,
-                              decoration: isDone ? TextDecoration.lineThrough : null,
-                              // color: HexColor("CCCCCC")
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "What will you focus on today?",
-                              border: InputBorder.none,
-                              hintStyle: GoogleFonts.merriweather(
-                                  fontSize: 19.2, color: HexColor("CCCCCC")),
+                              fontWeight: FontWeight.w300,
                             ),
                           ),
-                        )
-                      ],
-                    ),
+                          Text(
+                            snapshot.data!.name!,
+                            style: const TextStyle(
+                              fontFamily: "Rubik",
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.card_giftcard_outlined,
+                          ))
+                    ],
                   ),
-                ),
 
-                const SizedBox(
-                  height: 20,
-                ),
+                  const SizedBox(
+                    height: 40,
+                  ),
 
-                // Your Progress
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: HexColor("eeeeee").withOpacity(0.5),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.show_chart_outlined,
-                                  size: 20,
-                                  color: HexColor("989898"),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Your progress",
-                                  style: TextStyle(
-                                      color: HexColor("989898"),
-                                      fontFamily: "Rubic",
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25,
-                              width: 91,
-                              child: ElevatedButton.icon(
-                                style: const ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll<Color>(
-                                          Colors.transparent),
-                                  shadowColor: WidgetStatePropertyAll<Color>(
-                                      Colors.transparent),
-                                ),
-                                onPressed: () {
-                                  context.push("/edit");
-                                },
-                                label: const Text("Edit"),
-                                icon: const Icon(
-                                  Icons.edit_outlined,
-                                  size: 18,
-                                ),
+                  // Quote
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: HexColor("eeeeee").withOpacity(0.5),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.format_quote_outlined,
+                                size: 20,
+                                color: HexColor("989898"),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Hero(
-                          tag: "progressBar",
-                          child: CircularSeekBar(
-                            width: double.infinity,
-                            height: 200,
-                            progress: 33,
-                            barWidth: 8,
-                            startAngle: 90,
-                            sweepAngle: 180,
-                            strokeCap: StrokeCap.round,
-                            progressGradientColors: const [
-                              Colors.redAccent,
-                              Colors.redAccent
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Daily Quote",
+                                style: TextStyle(
+                                    color: HexColor("989898"),
+                                    fontFamily: "Rubic",
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ],
-                            dashWidth: 50,
-                            dashGap: 15,
-                            animation: true,
-                            child: Align(
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 18.0),
-                                  child: Text(
-                                    "20.15",
-                                    style: TextStyle(
-                                      color: HexColor("333333"),
-                                      fontSize: 40,
-                                      fontFamily: "Spring",
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                )),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Text(
-                              "15.80",
-                              style: TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 18,
-                                fontFamily: "Spring",
-                                fontWeight: FontWeight.w700,
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            '"If you wish to be a success in the world, promise everything, deliver nothing."',
+                            style: GoogleFonts.merriweather(
+                              fontSize: 22,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.favorite_outline_rounded,
+                                    color: HexColor("FA4C4C"),
+                                  )),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 1,
+                                    width: 25,
+                                    color: HexColor("666666"),
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    "Napolean",
+                                    style: GoogleFonts.merriweather(
+                                        fontSize: 15, color: HexColor("666666")),
+                                  )
+                                ],
                               ),
-                            ),
-                            Container(
-                              width: 1.0,
-                              height: 15.0,
-                              color: HexColor("CCCCCC"),
-                            ),
-                            Text(
-                              "2nd trimester",
-                              style: TextStyle(
-                                color: HexColor("CCCCCC"),
-                                fontSize: 18,
-                                fontFamily: "Spring",
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            Container(
-                              width: 1.0,
-                              height: 15.0,
-                              color: HexColor("CCCCCC"),
-                            ),
-                            Text(
-                              "3rd trimester",
-                              style: TextStyle(
-                                color: HexColor("CCCCCC"),
-                                fontSize: 18,
-                                fontFamily: "Spring",
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                const SizedBox(
-                  height: 30,
-                ),
+                  const SizedBox(
+                    height: 20,
+                  ),
 
-                InkWell(
-                  onTap: () {},
-                  child: const Text(
-                    "Need ressources?",
-                    style: TextStyle(
-                      color: AppColors.blue1,
-                      fontFamily: "Spring",
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.blue1,
-                      decorationStyle: TextDecorationStyle.wavy,
+                  // Main Task
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: HexColor("eeeeee").withOpacity(0.5),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.task_alt_rounded,
+                                size: 20,
+                                color: HexColor("989898"),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Today's main task",
+                                style: TextStyle(
+                                    color: HexColor("989898"),
+                                    fontFamily: "Rubic",
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          InkWell(
+                            onDoubleTap: () async{
+                              setState((){
+                                Provider.of<DbProvider>(context, listen: false).isDone = !Provider.of<DbProvider>(context, listen: false).isDone;
+                                });
+
+                                IsarServices isarServices = IsarServices();
+                                final db = isarServices.openDb();
+                                final isar = await db;
+
+                                final userId = await isar.studentModels.where().findAll();
+                                final existingUser = userId[0];
+
+                                await isar.writeTxn(() async {
+                                  existingUser.isDone = Provider.of<DbProvider>(context, listen: false).isDone;
+                                  await isar.studentModels.put(existingUser);
+                              });
+                            },
+                            child: TextFormField(
+                              // readOnly: mainTaskController.text == "" ? false : true,
+                              enableInteractiveSelection: mainTaskController.text == "" ? true : false,
+                              controller: mainTaskController,
+                              onFieldSubmitted: (value) async{
+                                IsarServices isarServices = IsarServices();
+                                final db = isarServices.openDb();
+                                final isar = await db;
+
+                                final userId = await isar.studentModels.where().findAll();
+                                final existingUser = userId[0];
+
+                                await isar.writeTxn(() async {
+                                  existingUser.mainTask = mainTaskController.text;
+                                  existingUser.isDone = false;
+                                  await isar.studentModels.put(existingUser);
+                                });
+
+                              },
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.merriweather(
+                                fontSize: 19.2,
+                                decoration: context.watch<DbProvider>().isDone ? TextDecoration.lineThrough : null,
+                                // color: HexColor("CCCCCC")
+                              ),
+                              decoration: InputDecoration(
+                                hintText: "What will you focus on today?",
+                                border: InputBorder.none,
+                                hintStyle: GoogleFonts.merriweather(
+                                    fontSize: 19.2, color: HexColor("CCCCCC")),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                )
-              ],
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+
+                  // Your Progress
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: HexColor("eeeeee").withOpacity(0.5),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.show_chart_outlined,
+                                    size: 20,
+                                    color: HexColor("989898"),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Your progress",
+                                    style: TextStyle(
+                                        color: HexColor("989898"),
+                                        fontFamily: "Rubic",
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 25,
+                                width: 91,
+                                child: ElevatedButton.icon(
+                                  style: const ButtonStyle(
+                                    backgroundColor:
+                                        WidgetStatePropertyAll<Color>(
+                                            Colors.transparent),
+                                    shadowColor: WidgetStatePropertyAll<Color>(
+                                        Colors.transparent),
+                                  ),
+                                  onPressed: () {
+                                    context.push("/edit");
+                                  },
+                                  label: const Text("Edit"),
+                                  icon: const Icon(
+                                    Icons.edit_outlined,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Hero(
+                            tag: "progressBar",
+                            child: CircularSeekBar(
+                              interactive: false,
+                              width: double.infinity,
+                              height: 200,
+                              progress: progressValue(snapshot.data!.trim1, snapshot.data!.trim2, snapshot.data!.trim3),
+                              barWidth: 8,
+                              startAngle: 90,
+                              sweepAngle: 180,
+                              strokeCap: StrokeCap.round,
+                              progressGradientColors: generateProgressColors(snapshot.data!.trim1, snapshot.data!.trim2, snapshot.data!.trim3, snapshot.data!.gradeGoal),
+                              dashWidth: 50,
+                              dashGap: 15,
+                              animation: true,
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 18.0),
+                                    child: Text(
+                                      snapshot.data!.gradeGoal.toString(),
+                                      style: TextStyle(
+                                        color: HexColor("333333"),
+                                        fontSize: 40,
+                                        fontFamily: "Spring",
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                snapshot.data!.trim1 != null ? snapshot.data!.trim1.toString() : "1st trimester",
+                                style: TextStyle(
+                                  color: snapshot.data!.trim1 != null ? returnColor(snapshot.data!.trim1, snapshot.data!.gradeGoal) : HexColor("CCCCCC"),
+                                  fontSize: 16,
+                                  fontFamily: "Spring",
+                                  fontWeight: snapshot.data!.trim1 != null ? FontWeight.w700 : FontWeight.w400 ,
+                                ),
+                              ),
+                              Container(
+                                width: 1.0,
+                                height: 15.0,
+                                color: HexColor("CCCCCC"),
+                              ),
+                              Text(
+                                snapshot.data!.trim2 != null ? snapshot.data!.trim2.toString() : "2nd trimester",
+                                style: TextStyle(
+                                  color: snapshot.data!.trim2 != null ? returnColor(snapshot.data!.trim2, snapshot.data!.gradeGoal) : HexColor("CCCCCC"),
+                                  fontSize: 16,
+                                  fontFamily: "Spring",
+                                  fontWeight: snapshot.data!.trim2 != null ? FontWeight.w700 : FontWeight.w400,
+                                ),
+                              ),
+                              Container(
+                                width: 1.0,
+                                height: 15.0,
+                                color: HexColor("CCCCCC"),
+                              ),
+                              Text(
+                                snapshot.data!.trim3 != null ? snapshot.data!.trim3.toString() : "3rd trimester",
+                                style: TextStyle(
+                                  color: snapshot.data!.trim3 != null ? returnColor(snapshot.data!.trim3, snapshot.data!.gradeGoal) : HexColor("CCCCCC"),
+                                  fontSize: 16,
+                                  fontFamily: "Spring",
+                                  fontWeight: snapshot.data!.trim3 != null ? FontWeight.w700 : FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 30,
+                  ),
+
+                  InkWell(
+                    onTap: () {},
+                    child: const Text(
+                      "Need ressources?",
+                      style: TextStyle(
+                        color: AppColors.blue1,
+                        fontFamily: "Spring",
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.blue1,
+                        decorationStyle: TextDecorationStyle.wavy,
+                      ),
+                    ),
+                  )
+                ],
+              );
+                }else{
+                  return const Text("no data");
+                }
+              },
             ),
           ),
         ),
       ),
-    ) : const Scaffold( body:  Center(child: Text("Laoding...")));
+    );
+    }
   }
-}

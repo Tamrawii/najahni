@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:najahni/presentation/screens/home/home_screen.dart';
 import 'package:najahni/presentation/screens/todo/todo.dart';
 
@@ -23,7 +22,6 @@ class _MainScreenState extends State<MainScreen> {
           onTap: (index) {
             setState(() {
               pageIndex = index;
-              print(pageIndex);
             });
           },
           currentIndex: pageIndex,

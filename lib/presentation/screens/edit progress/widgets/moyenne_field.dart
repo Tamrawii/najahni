@@ -6,10 +6,12 @@ class Moyenne extends StatelessWidget {
     super.key,
     required this.controller,
     required this.text,
+    required this.color,
   });
 
   final TextEditingController controller;
   final String text;
+  final MaterialAccentColor color;
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +48,9 @@ class Moyenne extends StatelessWidget {
                     child: TextField(
                       controller: controller,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 19.2,
-                        color: Colors.redAccent,
+                        color: color,
                         fontFamily: "Spring",
                       ),
                       decoration: InputDecoration(

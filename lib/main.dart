@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:najahni/app.dart';
 import 'package:najahni/core/models/student_model.dart';
 import 'package:najahni/data/local/db/app_db.dart';
+import 'package:najahni/data/providers/db_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -45,5 +47,9 @@ void main() async{
   isEmpty = await isarServices.isEmpty();
   Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
 
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context)=> DbProvider()),
+    ],
+    child: const MyApp()));
 }

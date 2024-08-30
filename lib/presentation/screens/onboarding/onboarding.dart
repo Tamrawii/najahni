@@ -29,7 +29,7 @@ class _OnBoardingState extends State<OnBoarding> {
     student.section = sectionController.text;
     student.gradeGoal = double.parse(goalController.text);
     student.mainTask = "";
-
+    student.isDone = false;
     isarServices.saveStudent(student);
   }
 
