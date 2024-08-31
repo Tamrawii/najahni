@@ -11,7 +11,7 @@ class Moyenne extends StatelessWidget {
 
   final TextEditingController controller;
   final String text;
-  final MaterialAccentColor color;
+  final color;
 
   @override
   Widget build(BuildContext context) {

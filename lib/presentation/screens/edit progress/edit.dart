@@ -132,19 +132,19 @@ class _EditPageState extends State<EditPage> {
                 Moyenne(
                   controller: _moy1,
                   text: "1st trimester",
-                  color: snapshot.data!.trim1 != null ? returnColor(snapshot.data!.trim1, snapshot.data!.gradeGoal) : Colors.blueAccent,
+                  color: snapshot.data!.trim1 != null ? returnColor(snapshot.data!.trim1, snapshot.data!.gradeGoal) : Colors.black,
                 ),
                 const SizedBox(height: 15),
                 Moyenne(
                   controller: _moy2,
                   text: "2nd trimester",
-                  color: snapshot.data!.trim2 != null ? returnColor(snapshot.data!.trim2, snapshot.data!.gradeGoal): Colors.blueAccent,
+                  color: snapshot.data!.trim2 != null ? returnColor(snapshot.data!.trim2, snapshot.data!.gradeGoal): Colors.black,
                 ),
                 const SizedBox(height: 15),
                 Moyenne(
                   controller: _moy3,
                   text: "3rd trimester",
-                  color: snapshot.data!.trim3 != null ? returnColor(snapshot.data!.trim3, snapshot.data!.gradeGoal) : Colors.blueAccent,
+                  color: snapshot.data!.trim3 != null ? returnColor(snapshot.data!.trim3, snapshot.data!.gradeGoal) : Colors.black,
                 ),
               ],
             ),
