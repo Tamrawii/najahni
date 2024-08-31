@@ -8,6 +8,7 @@ class ToDo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -37,55 +38,55 @@ class ToDo extends StatelessWidget {
                   ),
                 ],
               ),
-
               Container(
                 padding: const EdgeInsets.all(20),
                 child: Row(
                   children: [
-                    Expanded(child: TextField(
-                      textCapitalization: TextCapitalization.sentences,
-                      style: const TextStyle(
-                        fontFamily: "Spring",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 19.2,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: "Type your task",
-                        hintStyle: TextStyle(
-                          color: HexColor("CCCCCC"),
+                    Expanded(
+                      child: TextField(
+                        textCapitalization: TextCapitalization.sentences,
+                        style: const TextStyle(
                           fontFamily: "Spring",
-                        )
+                          fontWeight: FontWeight.w500,
+                          fontSize: 19.2,
+                        ),
+                        decoration: InputDecoration(
+                            hintText: "Type your task",
+                            hintStyle: TextStyle(
+                              color: HexColor("CCCCCC"),
+                              fontFamily: "Spring",
+                            )),
                       ),
-                    ),),
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.add))
+                    ),
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.add))
                   ],
                 ),
               ),
-
               const SizedBox(height: 30),
-
               Container(
-                decoration:  BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: HexColor("eeeeee").withOpacity(0.5),
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-
-                  ]
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.grey.withOpacity(0.2),
+                  //     spreadRadius: 1,
+                  //     blurRadius: 2,
+                  //     offset: const Offset(0, 3), // changes position of shadow
+                  //   ),
+                  // ],
                 ),
                 child: Row(
                   children: [
-                    Checkbox(value: false, onChanged: (val){}),
-                    const Text("Finish programming lesson", style: TextStyle(
-                      fontSize: 19.2,
-                      fontFamily: "Spring",
-                      fontWeight: FontWeight.w500,
-                    ),),
+                    Checkbox(value: false, onChanged: (val) {}),
+                    const Text(
+                      "Finish programming lesson",
+                      style: TextStyle(
+                        fontSize: 19.2,
+                        fontFamily: "Spring",
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
               ),

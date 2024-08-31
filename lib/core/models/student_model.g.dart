@@ -896,7 +896,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionIsNull() {
+      sectionIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'section',
@@ -905,7 +905,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionIsNotNull() {
+      sectionIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'section',
@@ -913,7 +913,8 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> secionEqualTo(
+  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+      sectionEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -927,7 +928,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionGreaterThan(
+      sectionGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -943,7 +944,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionLessThan(
+      sectionLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -958,7 +959,8 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> secionBetween(
+  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+      sectionBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -978,7 +980,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionStartsWith(
+      sectionStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -992,7 +994,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionEndsWith(
+      sectionEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1006,7 +1008,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionContains(String value, {bool caseSensitive = true}) {
+      sectionContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'section',
@@ -1016,9 +1018,8 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> secionMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+      sectionMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'section',
@@ -1029,7 +1030,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionIsEmpty() {
+      sectionIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'section',
@@ -1039,7 +1040,7 @@ extension StudentModelQueryFilter
   }
 
   QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      secionIsNotEmpty() {
+      sectionIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'section',
@@ -1360,13 +1361,13 @@ extension StudentModelQuerySortBy
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortBySecion() {
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortBySection() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'section', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortBySecionDesc() {
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortBySectionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'section', Sort.desc);
     });
@@ -1483,13 +1484,13 @@ extension StudentModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenBySecion() {
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenBySection() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'section', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenBySecionDesc() {
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenBySectionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'section', Sort.desc);
     });
@@ -1567,7 +1568,7 @@ extension StudentModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctBySecion(
+  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctBySection(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'section', caseSensitive: caseSensitive);
@@ -1631,7 +1632,7 @@ extension StudentModelQueryProperty
     });
   }
 
-  QueryBuilder<StudentModel, String?, QQueryOperations> secionProperty() {
+  QueryBuilder<StudentModel, String?, QQueryOperations> sectionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'section');
     });
