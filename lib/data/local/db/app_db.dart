@@ -34,12 +34,4 @@ class IsarServices {
       isar.studentModels.put(student);
     });
   }
-
-  void savetodo(TodoModel task) async {
-    final isar = await openDb();
-
-    await isar.writeTxn(() async {
-      isar.todoModels.put(task);
-    });
-  }
 }

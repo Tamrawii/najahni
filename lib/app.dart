@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:najahni/presentation/router.dart';
 
-
-
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

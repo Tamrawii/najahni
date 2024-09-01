@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:najahni/core/constants/colors.dart';
+import 'package:najahni/core/models/todo_model.dart';
+import 'package:najahni/data/providers/todo_provider.dart';
+import 'package:najahni/presentation/screens/todo/widgets/new_task.dart';
+import 'package:provider/provider.dart';
 
-class ToDo extends StatelessWidget {
+class ToDo extends StatefulWidget {
   const ToDo({super.key});
+
+  @override
+  State<ToDo> createState() => _ToDoState();
+}
+
+class _ToDoState extends State<ToDo> {
+  TextEditingController taskController = TextEditingController();
+  bool isDone = false;
 
   @override
   Widget build(BuildContext context) {
@@ -12,85 +24,110 @@ class ToDo extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    "You've got",
-                    style: TextStyle(
-                      fontSize: 19.2,
-                    ),
-                  ),
-                  Text(
-                    " 5 tasks ",
-                    style: TextStyle(
-                      fontSize: 19.2,
-                      color: AppColors.blue1,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    "to finish",
-                    style: TextStyle(
-                      fontSize: 19.2,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Row(
+          child: StreamBuilder(
+            stream: context.read<TodoProvider>().loadData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: Text("Loading..."));
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return Column(
                   children: [
-                    Expanded(
-                      child: TextField(
-                        textCapitalization: TextCapitalization.sentences,
-                        style: const TextStyle(
-                          fontFamily: "Spring",
-                          fontWeight: FontWeight.w500,
-                          fontSize: 19.2,
+                     Row(
+                      children: [
+                        const Text(
+                          "You've got",
+                          style: TextStyle(
+                            fontSize: 19.2,
+                          ),
                         ),
-                        decoration: InputDecoration(
-                            hintText: "Type your task",
-                            hintStyle: TextStyle(
-                              color: HexColor("CCCCCC"),
-                              fontFamily: "Spring",
-                            )),
+                        Text(
+                          " ${context.watch<TodoProvider>().count} ",
+                          style: const TextStyle(
+                            fontSize: 19.2,
+                            color: AppColors.blue1,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const Text(
+                          "to finish",
+                          style: TextStyle(
+                            fontSize: 19.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30,),
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: taskController,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: const TextStyle(
+                                fontFamily: "Spring",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 19.2,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: "Type your task",
+                                hintStyle: TextStyle(
+                                  color: HexColor("CCCCCC"),
+                                  fontFamily: "Spring",
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              TodoModel task = TodoModel();
+                              task.taskName = taskController.text;
+                              task.isDone = isDone;
+
+                              Provider.of<TodoProvider>(context, listen: false).saveTask(task);
+                              taskController.clear();
+                              FocusScope.of(context).unfocus();
+                            },
+                            icon: const Icon(Icons.add),
+                          ),
+                        ],
                       ),
                     ),
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.add))
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
-              Container(
-                decoration: BoxDecoration(
-                  color: HexColor("eeeeee").withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(10),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.grey.withOpacity(0.2),
-                  //     spreadRadius: 1,
-                  //     blurRadius: 2,
-                  //     offset: const Offset(0, 3), // changes position of shadow
-                  //   ),
-                  // ],
-                ),
-                child: Row(
-                  children: [
-                    Checkbox(value: false, onChanged: (val) {}),
-                    const Text(
-                      "Finish programming lesson",
-                      style: TextStyle(
-                        fontSize: 19.2,
-                        fontFamily: "Spring",
-                        fontWeight: FontWeight.w500,
+                    const SizedBox(height: 5),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final task = snapshot.data![index];
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Dismissible(
+                              background: Container(
+                                color: Colors.redAccent,
+                                child: const Icon(Icons.delete_rounded, color: Colors.white,),
+                              ),
+                              onDismissed: (direction) {
+                                int id = task.id;
+                                Provider.of<TodoProvider>(context, listen: false).removeTask(id);
+                              },
+                              key: ValueKey<int>(index),
+                              child: NewTask(
+                                title: task.taskName!,
+                                isDone: task.isDone!,
+                                id: task.id,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
-                ),
-              ),
-            ],
+                );
+              } else {
+                return const Center(child: Text("No data"));
+              }
+            },
           ),
         ),
       ),
