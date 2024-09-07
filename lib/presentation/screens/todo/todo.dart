@@ -48,9 +48,9 @@ class _ToDoState extends State<ToDo> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const Text(
-                          "to finish",
-                          style: TextStyle(
+                        Text(
+                          context.watch<TodoProvider>().count <= 1 ? "task to finish" : "tasks to finish",
+                          style: const TextStyle(
                             fontSize: 19.2,
                           ),
                         ),

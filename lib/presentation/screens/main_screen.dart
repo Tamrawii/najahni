@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:najahni/presentation/screens/calculator/calculator.dart';
 import 'package:najahni/presentation/screens/home/home_screen.dart';
 import 'package:najahni/presentation/screens/todo/todo.dart';
 
@@ -14,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List pagesList = [const HomeScreen(), const ToDo()];
+    List pagesList = [const HomeScreen(), const ToDo(), const CalculatorScreen()];
 
     return Scaffold(
       body: pagesList[pageIndex],
@@ -25,13 +26,13 @@ class _MainScreenState extends State<MainScreen> {
             });
           },
           currentIndex: pageIndex,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded), label: "Home"),
+                icon: Icon(pageIndex == 0 ? Icons.home_rounded : Icons.home_outlined), label: "Home"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.note_alt_outlined), label: "To-Do"),
+                icon: Icon(pageIndex == 1 ? Icons.note_alt : Icons.note_alt_outlined), label: "To-Do"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.calculate_outlined), label: "Grade Calc"),
+                icon: Icon(pageIndex == 2 ? Icons.calculate : Icons.calculate_outlined), label: "Grade Calc"),
           ]),
     );
   }

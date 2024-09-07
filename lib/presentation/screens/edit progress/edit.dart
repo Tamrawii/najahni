@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:isar/isar.dart';
+import 'package:najahni/core/constants/colors.dart';
 import 'package:najahni/core/models/student_model.dart';
 import 'package:najahni/core/utils/helpers.dart';
 import 'package:najahni/data/local/db/app_db.dart';
@@ -176,7 +177,7 @@ class _EditPageState extends State<EditPage> {
 
           FocusManager.instance.primaryFocus!.unfocus();
         },
-        child: const Icon(Icons.save_outlined),
+        child: const Icon(Icons.save_outlined, color: AppColors.blue1,),
       ),
     );
   }

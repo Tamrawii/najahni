@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // Use it inside StreamBuilder
     context.read<DbProvider>().loadData();
     super.initState();
   }
