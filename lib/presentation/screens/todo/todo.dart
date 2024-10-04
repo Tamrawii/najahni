@@ -29,29 +29,33 @@ class _ToDoState extends State<ToDo> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: Text("Loading..."));
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              } else {
                 return Column(
                   children: [
                      Row(
                       children: [
-                        const Text(
+                         Text(
                           "You've got",
                           style: TextStyle(
-                            fontSize: 19.2,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor("333333"),
                           ),
                         ),
                         Text(
                           " ${context.watch<TodoProvider>().count} ",
                           style: const TextStyle(
-                            fontSize: 19.2,
+                            fontSize: 24,
                             color: AppColors.blue1,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         Text(
                           context.watch<TodoProvider>().count <= 1 ? "task to finish" : "tasks to finish",
-                          style: const TextStyle(
-                            fontSize: 19.2,
+                          style:  TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor("333333"),
                           ),
                         ),
                       ],
@@ -103,6 +107,7 @@ class _ToDoState extends State<ToDo> {
                           return Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: Dismissible(
+                              key: ValueKey<int>(index),
                               background: Container(
                                 color: Colors.redAccent,
                                 child: const Icon(Icons.delete_rounded, color: Colors.white,),
@@ -111,7 +116,6 @@ class _ToDoState extends State<ToDo> {
                                 int id = task.id;
                                 Provider.of<TodoProvider>(context, listen: false).removeTask(id);
                               },
-                              key: ValueKey<int>(index),
                               child: NewTask(
                                 title: task.taskName!,
                                 isDone: task.isDone!,
@@ -124,8 +128,8 @@ class _ToDoState extends State<ToDo> {
                     ),
                   ],
                 );
-              } else {
-                return const Center(child: Text("No data"));
+
+
               }
             },
           ),

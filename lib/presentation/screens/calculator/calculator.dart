@@ -164,9 +164,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           floatingActionButton: FloatingActionButton(onPressed: (){
              BacInfo bacInfo = BacInfo();
 
-                    String moy = bacInfo.calcMoyenne(double.parse(_controllers[0].text), double.parse(_controllers[1].text), double.parse(_controllers[2].text), double.parse(_controllers[4].text), double.parse(_controllers[3].text), double.parse(_controllers[5].text), double.parse(_controllers[6].text), double.parse(_controllers[7].text), double.parse(_controllers[8].text), double.parse(_controllers[9].text), 18);
+            String moy = bacInfo.calcMoyenne(double.parse(_controllers[0].text), double.parse(_controllers[1].text), double.parse(_controllers[2].text), double.parse(_controllers[4].text), double.parse(_controllers[3].text), double.parse(_controllers[5].text), double.parse(_controllers[6].text), double.parse(_controllers[7].text), double.parse(_controllers[8].text), double.parse(_controllers[9].text), 18);
 
-                    print(moy);
+            print(moy);
           }, child: const Icon(Icons.calculate_outlined, color: AppColors.blue1,),),
         ),
       ),
