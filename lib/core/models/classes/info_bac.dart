@@ -1,16 +1,16 @@
 class BacInfo {
-  List<List<Object>> bacInfo = [
-    ["Arabic", 1],
-    ["French", 1],
-    ["English", 1],
-    ["Mathematics", 3],
-    ["Physics", 3],
-    ["Programming", 3],
-    ["STI", 3],
-    ["Philo", 1],
-    ["Option", 1],
-    ["Sport", 1],
-    ["total", 18]
+  List<String>bacInfo = [
+    "Arabic",
+    "French",
+    "English",
+    "Mathematics",
+    "Physics",
+    "Programming",
+    "STI",
+    "Philo",
+    "Option",
+    "Sport",
+    "total",
   ];
 
   String calcMoyenne(ar, fr, eng, phy, math, prog, sti, opt, philo, sport, total){

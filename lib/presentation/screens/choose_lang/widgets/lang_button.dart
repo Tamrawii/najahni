@@ -8,9 +8,9 @@ langButton(isSelected, text, img) {
     child: ElevatedButton(
       onPressed: () {},
       style: ButtonStyle(
-          shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-          backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-          shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+          shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+          backgroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+          shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                   side: BorderSide(

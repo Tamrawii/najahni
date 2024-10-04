@@ -35,27 +35,77 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget build(BuildContext context) {
     BacInfo bacInfo = BacInfo();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
+    return Container(
+      color: AppColors.blue3.withOpacity(0.5),
+      child: SafeArea(
+        left: false,
+        right: false,
+        bottom: false,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
             children: [
-              const Text("Bac Informatique", style: TextStyle(
-                fontFamily: "Spring",
-                fontWeight: FontWeight.w600,
-                fontSize: 25,
-                color: AppColors.blue1,
-              ),),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.blue3.withOpacity(0.5),
+                  borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30))
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      Row(
+                    children: [
+                      Text("Niveau:", style: TextStyle(
+                        fontFamily: "Spring",
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30,
+                        color: AppColors.blue1,
+                      ),),
+                      SizedBox(width: 15,),
+                      Text("Bac", style: TextStyle(
+                        fontFamily: "Spring",
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30,
+                        // color: AppColors.blue1,
+                      ),),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text("Section:", style: TextStyle(
+                        fontFamily: "Spring",
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30,
+                        color: AppColors.blue1,
+                      ),),
+                      SizedBox(width: 15,),
+                      Text("Informatique", style: TextStyle(
+                        fontFamily: "Spring",
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30,
+                        // color: AppColors.blue1,
+                      ),),
+                    ],
+                  ),
+                    ],
+                  ),
+
+            ),
+              ),
               const SizedBox(
                 height: 15,
               ),
               Expanded(
-                child: ListView.builder(
+                child: GridView.count(
                   physics: const BouncingScrollPhysics(),
-                  itemCount: bacInfo.bacInfo.length - 1,
-                  itemBuilder: (context, index) {
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  // mainAxisSpacing: 10,
+                  // childAspectRatio: 2,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+
+                  children: List.generate(bacInfo.bacInfo.length-1, (index) {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 20),
                       padding: const EdgeInsets.all(14),
@@ -64,11 +114,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(bacInfo.bacInfo[index][0].toString(), style: const TextStyle(
+                          Text(bacInfo.bacInfo[index].toString(), style: TextStyle(
                             fontSize: 20,
+                            color: HexColor("333333"),
+                            fontFamily: "Spring",
+                            fontWeight: FontWeight.bold,
                           ),),
-                          const SizedBox(height: 10,),
+                          const SizedBox(height: 15,),
                           SizedBox(
                             width: 100,
                             child: TextField(
@@ -82,8 +137,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: HexColor("DDDDDD")),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide.none,
                                 ),
                                 border: const OutlineInputBorder(
                                   borderSide: BorderSide(color: AppColors.blue1),
@@ -100,21 +155,21 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         ],
                       ),
                     );
-                  },
+                  }),
 
                 ),
               ),
             ],
           ),
+          floatingActionButton: FloatingActionButton(onPressed: (){
+             BacInfo bacInfo = BacInfo();
+
+                    String moy = bacInfo.calcMoyenne(double.parse(_controllers[0].text), double.parse(_controllers[1].text), double.parse(_controllers[2].text), double.parse(_controllers[4].text), double.parse(_controllers[3].text), double.parse(_controllers[5].text), double.parse(_controllers[6].text), double.parse(_controllers[7].text), double.parse(_controllers[8].text), double.parse(_controllers[9].text), 18);
+
+                    print(moy);
+          }, child: const Icon(Icons.calculate_outlined, color: AppColors.blue1,),),
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-         BacInfo bacInfo = BacInfo();
-
-                String moy = bacInfo.calcMoyenne(double.parse(_controllers[0].text), double.parse(_controllers[1].text), double.parse(_controllers[2].text), double.parse(_controllers[4].text), double.parse(_controllers[3].text), double.parse(_controllers[5].text), double.parse(_controllers[6].text), double.parse(_controllers[7].text), double.parse(_controllers[8].text), double.parse(_controllers[9].text), 18);
-
-                print(moy);
-      }, child: const Icon(Icons.calculate_outlined, color: AppColors.blue1,),),
     );
   }
 }

@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       height: 15,
                                     ),
                                     Text(
-                                      '"${context.watch<DbProvider>().quote["content"]}"',
+                                      '"${context.watch<DbProvider>().quote["slip"]["advice"]}"',
                                       style: GoogleFonts.merriweather(
                                         fontSize: 22,
                                       ),
@@ -147,26 +147,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Icons.favorite_outline_rounded,
                                               color: HexColor("FA4C4C"),
                                             )),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              height: 1,
-                                              width: 25,
-                                              color: HexColor("666666"),
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              context
-                                                  .watch<DbProvider>()
-                                                  .quote["author"],
-                                              style: GoogleFonts.merriweather(
-                                                  fontSize: 15,
-                                                  color: HexColor("666666")),
-                                            )
-                                          ],
-                                        ),
                                       ],
                                     ),
                                   ],
