@@ -107,6 +107,7 @@ class _ToDoState extends State<ToDo> {
                           return Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: Dismissible(
+                              // Use another value (other than the index)
                               key: ValueKey<int>(index),
                               background: Container(
                                 color: Colors.redAccent,
@@ -128,8 +129,6 @@ class _ToDoState extends State<ToDo> {
                     ),
                   ],
                 );
-
-
               }
             },
           ),

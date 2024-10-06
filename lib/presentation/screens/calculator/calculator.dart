@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:najahni/core/constants/colors.dart';
 import 'package:najahni/core/models/classes/info_bac.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
@@ -19,7 +20,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   void initState() {
     _controllers = List.generate(bacInfo.bacInfo.length, (index) => TextEditingController());
+    test();
     super.initState();
+  }
+
+  void test()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? section = prefs.getString('section');
+    print(section);
   }
 
   @override

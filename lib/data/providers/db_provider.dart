@@ -3,6 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:najahni/core/models/student_model.dart';
 import 'package:najahni/core/utils/api.dart';
 import 'package:najahni/data/local/db/app_db.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DbProvider extends ChangeNotifier {
   String? userName;
@@ -40,6 +41,8 @@ class DbProvider extends ChangeNotifier {
     final isar = await db;
 
     final sudent = await isar.studentModels.where().findAll();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('section', sudent[0].section!);
     notifyListeners();
     return sudent[0];
   }
